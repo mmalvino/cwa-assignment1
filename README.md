@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CWA Assignment 1 — Tabs Generator WebApp
+## Project Description
+This project is part of the *Cloud Based Web Application* course at La Trobe University.  
+The aim is to build a **Next.js based frontend web application** with multiple pages of different functions, have navigation features, dark/light theme switching, etc.
 
-## Getting Started
+This branch (`layout`) contains the **complete layout structure** of the web app including header, footer, navigation bar, placeholder pages, theme toggle, and hamburger menu.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Current Features Implemented
+- **Header**
+  - Displays student name and ID
+  - Buttons to navigate to these pages: Home, About, Pre-lab Questions, Escape Room, Coding Races
+- **Footer**
+  - Copyright symbol and text
+  - Student name, ID, and current date
+- **Pages**  (All currently just placeholders)
+  - Home
+  - About
+  - Pre-lab Questions
+  - Escape Room
+  - Coding Races
+- **Navigation**
+  - Visible buttons to navigate to different pages under the title
+  - Hamburger menu with dropdown menu to go to different pages
+- **Theme Toggle**
+  - Light/Dark mode switching using DaisyUI
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
