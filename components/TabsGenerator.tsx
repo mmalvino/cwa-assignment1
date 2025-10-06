@@ -13,6 +13,8 @@ const TabsGenerator: React.FC = () => {
     { id: 1, title: "Tab 1", content: "This is the first tab content." },
   ]);
 
+  const [generatedCode, setGeneratedCode] = useState("");
+
   const handleAddTab = () => {
     if (tabs.length >= 15) return;
     const newTab: Tab = {
@@ -29,6 +31,13 @@ const TabsGenerator: React.FC = () => {
 
   const handleEditTab = (id: number, field: "title" | "content", value: string) => {
     setTabs(tabs.map((tab) => (tab.id === id ? { ...tab, [field]: value } : tab)));
+  };
+
+  const handleGenerateCode = () => {
+    const html = `<div>
+${tabs.map(t => `<div>${t.title}: ${t.content}</div>`).join("\n")}
+</div>`;
+    setGeneratedCode(html);
   };
 
   return (
@@ -57,6 +66,23 @@ const TabsGenerator: React.FC = () => {
           />
         </div>
       ))}
+
+      {/* Generate HTML Button */}
+      <button onClick={handleGenerateCode} style={{ padding: "8px 16px", cursor: "pointer" }}>
+        Generate HTML
+      </button>
+
+      {/* Generated HTML Output */}
+      {generatedCode && (
+        <div>
+          <h3 style={{ fontWeight: "bold", marginBottom: "4px" }}> Generated HTML:</h3>
+          <textarea
+            readOnly
+            value={generatedCode}
+            style={{ width: "100%", height: "300px", fontFamily: "monospace", fontSize: "12px", padding: "4px" }}
+          />
+        </div>
+      )}
     </div>
   );
 };
