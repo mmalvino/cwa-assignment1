@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface Tab {
   id: number;
@@ -9,12 +9,27 @@ interface Tab {
 }
 
 const TabsGenerator: React.FC = () => {
-  const [tabs, setTabs] = useState<Tab[]>([
-    { id: 1, title: "Tab 1", content: "This is the first tab content." },
-  ]);
+  // Initialize tabs from localStorage if available
+  const [tabs, setTabs] = useState<Tab[]>(() => {
+    const saved = localStorage.getItem("tabsData");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return [{ id: 1, title: "Tab 1", content: "This is the first tab content." }];
+      }
+    }
+    return [{ id: 1, title: "Tab 1", content: "This is the first tab content." }];
+  });
 
   const [generatedCode, setGeneratedCode] = useState("");
 
+  // Persist tabs to localStorage
+  useEffect(() => {
+    localStorage.setItem("tabsData", JSON.stringify(tabs));
+  }, [tabs]);
+
+  // Add new tab (max 15)
   const handleAddTab = () => {
     if (tabs.length >= 15) return;
     const newTab: Tab = {
@@ -25,14 +40,17 @@ const TabsGenerator: React.FC = () => {
     setTabs([...tabs, newTab]);
   };
 
+  // Remove tab
   const handleRemoveTab = (id: number) => {
     setTabs(tabs.filter((tab) => tab.id !== id));
   };
 
+  // Edit tab title/content
   const handleEditTab = (id: number, field: "title" | "content", value: string) => {
     setTabs(tabs.map((tab) => (tab.id === id ? { ...tab, [field]: value } : tab)));
   };
 
+  // Generate HTML output with inline CSS and clickable tabs
   const handleGenerateCode = () => {
     const html = `
 <div data-tabs-container style="display:flex; flex-direction:column; font-family:sans-serif;">
@@ -40,7 +58,7 @@ const TabsGenerator: React.FC = () => {
     ${tabs
       .map(
         (t, i) =>
-          `<button data-tab-button onclick="showTab(this, ${i})" style="padding:8px 16px; border:1px solid #ccc; border-bottom:none; background:${i === 0 ? '#eee' : '#fff'}; cursor:pointer;">${t.title}</button>`
+          `<button data-tab-button onclick="showTab(this, ${i})" style="padding:8px 16px; border:1px solid #ccc; border-bottom:none; background:${i===0?'#eee':'#fff'}; cursor:pointer;">${t.title}</button>`
       )
       .join("\n")}
   </div>
@@ -48,7 +66,7 @@ const TabsGenerator: React.FC = () => {
     ${tabs
       .map(
         (t, i) =>
-          `<div data-tab-content style="padding:12px; border:1px solid #ccc; border-top:none; display:${i === 0 ? 'block' : 'none'};">${t.content}</div>`
+          `<div data-tab-content style="padding:12px; border:1px solid #ccc; border-top:none; display:${i===0?'block':'none'};">${t.content}</div>`
       )
       .join("\n")}
   </div>
@@ -69,6 +87,7 @@ function showTab(btn, index){
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "16px" }}>
+      {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h2 style={{ fontSize: "1.25rem", fontWeight: "bold" }}> Tabs Editor</h2>
         <button onClick={handleAddTab} style={{ padding: "6px 12px", cursor: "pointer" }}>
@@ -76,6 +95,7 @@ function showTab(btn, index){
         </button>
       </div>
 
+      {/* Tabs Editor */}
       {tabs.map((tab) => (
         <div key={tab.id} style={{ border: "1px solid #ccc", padding: "8px", marginBottom: "8px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "4px" }}>
