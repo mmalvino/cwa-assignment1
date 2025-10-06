@@ -34,10 +34,37 @@ const TabsGenerator: React.FC = () => {
   };
 
   const handleGenerateCode = () => {
-    const html = `<div>
-${tabs.map(t => `<div>${t.title}: ${t.content}</div>`).join("\n")}
-</div>`;
-    setGeneratedCode(html);
+    const html = `
+<div data-tabs-container style="display:flex; flex-direction:column; font-family:sans-serif;">
+  <div style="display:flex; gap:4px; border-bottom:2px solid #ccc;">
+    ${tabs
+      .map(
+        (t, i) =>
+          `<button data-tab-button onclick="showTab(this, ${i})" style="padding:8px 16px; border:1px solid #ccc; border-bottom:none; background:${i === 0 ? '#eee' : '#fff'}; cursor:pointer;">${t.title}</button>`
+      )
+      .join("\n")}
+  </div>
+  <div>
+    ${tabs
+      .map(
+        (t, i) =>
+          `<div data-tab-content style="padding:12px; border:1px solid #ccc; border-top:none; display:${i === 0 ? 'block' : 'none'};">${t.content}</div>`
+      )
+      .join("\n")}
+  </div>
+</div>
+
+<script>
+function showTab(btn, index){
+  const container = btn.closest('[data-tabs-container]');
+  const buttons = container.querySelectorAll('[data-tab-button]');
+  const contents = container.querySelectorAll('[data-tab-content]');
+  buttons.forEach((b,i)=>b.style.background = i===index ? '#eee' : '#fff');
+  contents.forEach((c,i)=>c.style.display = i===index ? 'block' : 'none');
+}
+</script>
+`;
+    setGeneratedCode(html.trim());
   };
 
   return (
