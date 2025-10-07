@@ -22,6 +22,7 @@ const TabsGenerator: React.FC = () => {
     return [{ id: 1, title: "Tab 1", content: "This is the first tab content." }];
   });
 
+  const [selectedTabId, setSelectedTabId] = useState<number>(tabs[0]?.id || 1);
   const [generatedCode, setGeneratedCode] = useState("");
 
   // Persist tabs to localStorage
@@ -38,11 +39,16 @@ const TabsGenerator: React.FC = () => {
       content: `This is content for Tab ${tabs.length + 1}.`,
     };
     setTabs([...tabs, newTab]);
+    setSelectedTabId(newTab.id);
   };
 
   // Remove tab
   const handleRemoveTab = (id: number) => {
-    setTabs(tabs.filter((tab) => tab.id !== id));
+    const filtered = tabs.filter((tab) => tab.id !== id);
+    setTabs(filtered);
+    if (selectedTabId === id && filtered.length > 0) {
+      setSelectedTabId(filtered[0].id);
+    }
   };
 
   // Edit tab title/content
@@ -85,51 +91,95 @@ function showTab(btn, index){
     setGeneratedCode(html.trim());
   };
 
+  const selectedTab = tabs.find((t) => t.id === selectedTabId);
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "16px" }}>
+    <div style={{ display: "flex", flexDirection: "column", padding: "16px", gap: "16px" }}>
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h2 style={{ fontSize: "1.25rem", fontWeight: "bold" }}> Tabs Editor</h2>
-        <button onClick={handleAddTab} style={{ padding: "6px 12px", cursor: "pointer" }}>
-          + Add Tab
-        </button>
+      <div style={{ display: "flex", justifyContent: "left" }}>
+        <h2 style={{ fontSize: "1.5rem", fontWeight: "bold" }}>Tabs Generator</h2>
       </div>
 
-      {/* Tabs Editor */}
-      {tabs.map((tab) => (
-        <div key={tab.id} style={{ border: "1px solid #ccc", padding: "8px", marginBottom: "8px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "4px" }}>
-            <input
-              value={tab.title}
-              onChange={(e) => handleEditTab(tab.id, "title", e.target.value)}
-              style={{ flex: 1, marginRight: "8px", padding: "4px" }}
-            />
-            <button onClick={() => handleRemoveTab(tab.id)} style={{ padding: "4px 8px", cursor: "pointer" }}>✕</button>
+      {/* 3-Column Layout */}
+      <div style={{ display: "flex", gap: "24px", justifyContent: "space-between" }}>
+        {/* LEFT: Tab Titles */}
+        <div style={{ flex: "1", border: "1px solid #ccc", padding: "8px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+            <h3 style={{ fontWeight: "bold" }}>Tab Titles</h3>
+            <button
+              onClick={handleAddTab}
+              style={{
+                padding: "6px 10px",
+                cursor: "pointer",
+                fontSize: "0.9rem",
+              }}
+            >
+              + Add Tab
+            </button>
           </div>
-          <textarea
-            value={tab.content}
-            onChange={(e) => handleEditTab(tab.id, "content", e.target.value)}
-            style={{ width: "100%", height: "80px", padding: "4px" }}
-          />
-        </div>
-      ))}
 
-      {/* Generate HTML Button */}
-      <button onClick={handleGenerateCode} style={{ padding: "8px 16px", cursor: "pointer" }}>
-        Generate HTML
-      </button>
-
-      {/* Generated HTML Output */}
-      {generatedCode && (
-        <div>
-          <h3 style={{ fontWeight: "bold", marginBottom: "4px" }}> Generated HTML:</h3>
-          <textarea
-            readOnly
-            value={generatedCode}
-            style={{ width: "100%", height: "300px", fontFamily: "monospace", fontSize: "12px", padding: "4px" }}
-          />
+          {tabs.map((tab) => (
+            <div
+              key={tab.id}
+              onClick={() => setSelectedTabId(tab.id)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "6px",
+                marginBottom: "4px",
+                cursor: "pointer",
+                backgroundColor: selectedTabId === tab.id ? "#f0f0f0" : "transparent",
+                borderRadius: "4px",
+              }}
+            >
+              <input
+                value={tab.title}
+                onChange={(e) => handleEditTab(tab.id, "title", e.target.value)}
+                style={{ flex: 1, marginRight: "6px", padding: "4px" }}
+              />
+              <button onClick={() => handleRemoveTab(tab.id)} style={{ padding: "4px 8px" }}>
+                ✕
+              </button>
+            </div>
+          ))}
         </div>
-      )}
+
+        {/* MIDDLE: Tab Content Editor */}
+        <div style={{ flex: "2", border: "1px solid #ccc", padding: "8px" }}>
+          <h3 style={{ fontWeight: "bold", marginBottom: "8px" }}>Tab Content</h3>
+          {selectedTab ? (
+            <textarea
+              value={selectedTab.content}
+              onChange={(e) => handleEditTab(selectedTab.id, "content", e.target.value)}
+              style={{ width: "100%", height: "300px", padding: "8px" }}
+            />
+          ) : (
+            <p>Select a tab to edit its content.</p>
+          )}
+        </div>
+
+        {/* RIGHT: Generate HTML */}
+        <div style={{ flex: "1.5", border: "1px solid #ccc", padding: "8px" }}>
+          <h3 style={{ fontWeight: "bold", marginBottom: "8px" }}>Generate HTML</h3>
+          <button onClick={handleGenerateCode} style={{ padding: "8px 16px", marginBottom: "8px", cursor: "pointer" }}>
+            Generate HTML
+          </button>
+          {generatedCode && (
+            <textarea
+              readOnly
+              value={generatedCode}
+              style={{
+                width: "100%",
+                height: "260px",
+                fontFamily: "monospace",
+                fontSize: "12px",
+                padding: "4px",
+              }}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };
