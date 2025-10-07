@@ -30,7 +30,9 @@ export default function Header() {
             <ThemeToggle />
           </div>
           <button
-            className="text-3xl focus:outline-none"
+            className={`text-3xl focus:outline-none transform transition-transform duration-300 ${
+              isMenuOpen ? "rotate-90 scale-110" : "rotate-0 scale-100"
+            }`}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             ☰
