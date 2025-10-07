@@ -64,7 +64,7 @@ const TabsGenerator: React.FC = () => {
     ${tabs
       .map(
         (t, i) =>
-          `<button data-tab-button onclick="showTab(this, ${i})" style="padding:8px 16px; border:1px solid #ccc; border-bottom:none; background:${i===0?'#eee':'#fff'}; cursor:pointer;">${t.title}</button>`
+          `<button data-tab-button onclick="showTab(this, ${i})" style="padding:8px 16px; border:1px solid #ccc; border-bottom:none; background:${i === 0 ? '#eee': '#fff'}; cursor:pointer;">${t.title}</button>`
       )
       .join("\n")}
   </div>
@@ -72,7 +72,7 @@ const TabsGenerator: React.FC = () => {
     ${tabs
       .map(
         (t, i) =>
-          `<div data-tab-content style="padding:12px; border:1px solid #ccc; border-top:none; display:${i===0?'block':'none'};">${t.content}</div>`
+          `<div data-tab-content style="padding:12px; border:1px solid #ccc; border-top:none; display:${i === 0 ? 'block' : 'none'};">${t.content}</div>`
       )
       .join("\n")}
   </div>
@@ -100,11 +100,33 @@ function showTab(btn, index){
         <h2 style={{ fontSize: "1.5rem", fontWeight: "bold" }}>Tabs Generator</h2>
       </div>
 
-      {/* 3-Column Layout */}
-      <div style={{ display: "flex", gap: "24px", justifyContent: "space-between" }}>
+      {/* Responsive 3-Column Layout */}
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",              
+          gap: "24px",
+          justifyContent: "space-between",
+        }}
+      >
         {/* LEFT: Tab Titles */}
-        <div style={{ flex: "1", border: "1px solid #ccc", padding: "8px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+        <div
+          style={{
+            flex: "1 1 250px",          
+            border: "1px solid #ccc",
+            padding: "8px",
+            minWidth: "250px",
+            maxWidth: "400px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "8px",
+            }}
+          >
             <h3 style={{ fontWeight: "bold" }}>Tab Titles</h3>
             <button
               onClick={handleAddTab}
@@ -146,13 +168,20 @@ function showTab(btn, index){
         </div>
 
         {/* MIDDLE: Tab Content Editor */}
-        <div style={{ flex: "2", border: "1px solid #ccc", padding: "8px" }}>
+        <div
+          style={{
+            flex: "2 1 350px",          
+            border: "1px solid #ccc",
+            padding: "8px",
+            minWidth: "300px",
+          }}
+        >
           <h3 style={{ fontWeight: "bold", marginBottom: "8px" }}>Tab Content</h3>
           {selectedTab ? (
             <textarea
               value={selectedTab.content}
               onChange={(e) => handleEditTab(selectedTab.id, "content", e.target.value)}
-              style={{ width: "100%", height: "300px", padding: "8px" }}
+              style={{ width: "100%", height: "300px", padding: "8px", resize: "vertical" }}
             />
           ) : (
             <p>Select a tab to edit its content.</p>
@@ -160,9 +189,19 @@ function showTab(btn, index){
         </div>
 
         {/* RIGHT: Generate HTML */}
-        <div style={{ flex: "1.5", border: "1px solid #ccc", padding: "8px" }}>
+        <div
+          style={{
+            flex: "1.5 1 300px",
+            border: "1px solid #ccc",
+            padding: "8px",
+            minWidth: "280px",
+          }}
+        >
           <h3 style={{ fontWeight: "bold", marginBottom: "8px" }}>Generate HTML</h3>
-          <button onClick={handleGenerateCode} style={{ padding: "8px 16px", marginBottom: "8px", cursor: "pointer" }}>
+          <button
+            onClick={handleGenerateCode}
+            style={{ padding: "8px 16px", marginBottom: "8px", cursor: "pointer" }}
+          >
             Generate HTML
           </button>
           {generatedCode && (
@@ -175,6 +214,7 @@ function showTab(btn, index){
                 fontFamily: "monospace",
                 fontSize: "12px",
                 padding: "4px",
+                resize: "vertical",
               }}
             />
           )}
