@@ -197,7 +197,7 @@ function showTab(btn, index){
             minWidth: "280px",
           }}
         >
-          <h3 style={{ fontWeight: "bold", marginBottom: "8px" }}>Generate HTML</h3>
+          <h3 style={{ fontWeight: "bold", marginBottom: "8px" }}>Output</h3>
           <button
             onClick={handleGenerateCode}
             style={{ padding: "8px 16px", marginBottom: "8px", cursor: "pointer" }}
