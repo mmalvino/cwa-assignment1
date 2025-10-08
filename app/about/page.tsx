@@ -6,7 +6,7 @@ export default function AboutPage() {
       <div className="w-full max-w-2xl aspect-video mb-6">
         <iframe
           className="w-full h-full rounded-lg shadow-lg"
-          src="https://www.youtube.com/embed/"
+          src="https://www.youtube.com/embed/nRHrWIZ_1cs"
           title="Project Demonstration Video"
           allowFullScreen
         ></iframe>
