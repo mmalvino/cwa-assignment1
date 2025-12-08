@@ -6,22 +6,26 @@ datasource db {
   provider = "sqlite"
 }
 
-model EscapeRoomConfig {
-  id           Int                  @id @default(autoincrement())
-  timerMinutes Int
-  hotspots     EscapeRoomHotspot[]  
-  createdAt    DateTime             @default(now())
-  updatedAt    DateTime             @updatedAt
+model EscapeRoom {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  title           String
+  description     String?
+  backgroundImage String   @default("/escape-room-bg.jpg")
+  timerSeconds    Int      @default(60)
+
+  hotspots Hotspot[] @relation("RoomHotspots")
 }
 
-model EscapeRoomHotspot {
-  id        Int                @id @default(autoincrement())
-  x         Float
-  y         Float
-  question  String
-  answer    String
-  configId  Int
-  config    EscapeRoomConfig   @relation(fields: [configId], references: [id])
-  createdAt    DateTime             @default(now())
-  updatedAt    DateTime             @updatedAt
+model Hotspot {
+  id         String     @id @default(cuid())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  x          Float
+  y          Float
+  question   String
+  answer     String
+  roomId     String
+  escapeRoom EscapeRoom @relation("RoomHotspots", fields: [roomId], references: [id])
 }
