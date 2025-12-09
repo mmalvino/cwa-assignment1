@@ -9,26 +9,35 @@ interface Tab {
 }
 
 const TabsGenerator: React.FC = () => {
-  // Initialize tabs from localStorage if available
-  const [tabs, setTabs] = useState<Tab[]>(() => {
+  const [tabs, setTabs] = useState<Tab[]>([{ id: 1, title: "Tab 1", content: "This is the first tab content." }]);
+  const [selectedTabId, setSelectedTabId] = useState<number>(tabs[0]?.id || 1);
+  const [generatedCode, setGeneratedCode] = useState("");
+  const [isClient, setIsClient] = useState(false);
+
+  // Only run client-specific code after hydration
+  useEffect(() => {
+    setIsClient(true);
+
+    // Load tabs from localStorage if available
     const saved = localStorage.getItem("tabsData");
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved) as Tab[];
+        if (parsed.length > 0) {
+          setTabs(parsed);
+          setSelectedTabId(parsed[0].id);
+        }
       } catch {
-        return [{ id: 1, title: "Tab 1", content: "This is the first tab content." }];
+        // fallback to default tab
       }
     }
-    return [{ id: 1, title: "Tab 1", content: "This is the first tab content." }];
-  });
+  }, []);
 
-  const [selectedTabId, setSelectedTabId] = useState<number>(tabs[0]?.id || 1);
-  const [generatedCode, setGeneratedCode] = useState("");
-
-  // Persist tabs to localStorage
+  // Persist tabs to localStorage (only on client)
   useEffect(() => {
+    if (!isClient) return;
     localStorage.setItem("tabsData", JSON.stringify(tabs));
-  }, [tabs]);
+  }, [tabs, isClient]);
 
   // Add new tab (max 15)
   const handleAddTab = () => {
@@ -104,7 +113,7 @@ function showTab(btn, index){
       <div
         style={{
           display: "flex",
-          flexWrap: "wrap",              
+          flexWrap: "wrap",
           gap: "24px",
           justifyContent: "space-between",
         }}
@@ -112,7 +121,7 @@ function showTab(btn, index){
         {/* LEFT: Tab Titles */}
         <div
           style={{
-            flex: "1 1 250px",          
+            flex: "1 1 250px",
             border: "1px solid #ccc",
             padding: "8px",
             minWidth: "250px",
@@ -170,7 +179,7 @@ function showTab(btn, index){
         {/* MIDDLE: Tab Content Editor */}
         <div
           style={{
-            flex: "2 1 350px",          
+            flex: "2 1 350px",
             border: "1px solid #ccc",
             padding: "8px",
             minWidth: "300px",
