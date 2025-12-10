@@ -1,0 +1,13 @@
+{
+  "deployments": [
+    {
+      "name": "escape-room-app",
+      "volumes": [
+        {
+          "name": "data-volume",
+          "path": "/data"
+        }
+      ]
+    }
+  ]
+}
