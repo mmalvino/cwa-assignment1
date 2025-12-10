@@ -44,7 +44,7 @@ next-env.d.ts
 
 .DS_Store
 
-dev.db
+
 
 # Playwright
 node_modules/
