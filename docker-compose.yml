@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  escape-room-app:
+    build:
+      context: .
+      # CRITICAL: Pass the DATABASE_URL as a build argument
+      args:
+        DATABASE_URL: file:/data/dev.db
+    ports:
+      - '3000:3000'
+    environment:
+      # This is for the RUNNING container to use the DB
+      DATABASE_URL: file:/data/dev.db
+    volumes:
+      - ./db_files:/data
+
+volumes:
+  db-volume:
